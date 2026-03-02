@@ -33,7 +33,7 @@ const ChatPanel = () => {
                 {messages.map((msg) => (
                     <div
                         key={msg.id}
-                        className={`mb-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}
+                        className={`mb-2 ${msg.sender === "user" ? "text-right" : "text-left"} mb-6`}
                     >
             <span
                 className={`${
