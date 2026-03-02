@@ -1,20 +1,22 @@
 import { memo } from "react";
-import { Document, Page } from "react-pdf";
+import { Document, Page, pdfjs } from "react-pdf";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { setCurrentPage, setDocument } from "./documentSlice";
+import {
+    setCurrentPage,
+    setDocument,
+    zoomIn,
+    zoomOut,
+} from "./documentSlice";
 
-import { pdfjs } from "react-pdf";
+// ✅ Correct worker for Vite
 import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
-
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
-
 
 function PdfViewer() {
     const dispatch = useAppDispatch();
 
-    const { file, pageCount, currentPage } = useAppSelector(
-        (state) => state.document
-    );
+    const { file, pageCount, currentPage, scale } =
+        useAppSelector((state) => state.document);
 
     if (!file) {
         return (
@@ -26,46 +28,75 @@ function PdfViewer() {
 
     return (
         <div className="mt-6 border rounded-lg p-4 bg-white shadow">
-            <div className="flex justify-between items-center mb-4">
-                <button
-                    disabled={currentPage <= 1}
-                    onClick={() => dispatch(setCurrentPage(currentPage - 1))}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-                >
-                    Previous
-                </button>
 
+            {/* Toolbar */}
+            <div className="flex justify-between items-center mb-4">
+
+                {/* Zoom Controls */}
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => dispatch(zoomOut())}
+                        className="px-3 py-1 bg-gray-200 rounded"
+                    >
+                        −
+                    </button>
+
+                    <button
+                        onClick={() => dispatch(zoomIn())}
+                        className="px-3 py-1 bg-gray-200 rounded"
+                    >
+                        +
+                    </button>
+                </div>
+
+                {/* Page Info */}
                 <span className="text-sm font-medium">
           Page {currentPage} of {pageCount || "--"}
         </span>
 
-                <button
-                    disabled={currentPage >= pageCount}
-                    onClick={() => dispatch(setCurrentPage(currentPage + 1))}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-                >
-                    Next
-                </button>
+                {/* Navigation */}
+                <div className="flex gap-2">
+                    <button
+                        disabled={currentPage <= 1}
+                        onClick={() =>
+                            dispatch(setCurrentPage(currentPage - 1))
+                        }
+                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    >
+                        Prev
+                    </button>
+
+                    <button
+                        disabled={currentPage >= pageCount}
+                        onClick={() =>
+                            dispatch(setCurrentPage(currentPage + 1))
+                        }
+                        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
 
+            {/* PDF Page */}
             <div className="flex justify-center">
-                <Document
-                    file={file}
-                    onLoadSuccess={({ numPages }) => {
-                        dispatch(setDocument({ pageCount: numPages }));
-                    }}
-                    loading={<div>Loading PDF...</div>}
-                    onLoadError={(error) => {
-                        console.error("PDF error:", error);
-                    }}
-                >
-                    <Page
-                        pageNumber={currentPage}
-                        width={600}
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
-                    />
-                </Document>
+                <div className="transition-all duration-300 ease-in-out">
+                    <Document
+                        file={file}
+                        onLoadSuccess={({ numPages }) => {
+                            dispatch(setDocument({ pageCount: numPages }));
+                        }}
+                        loading={<div>Loading PDF...</div>}
+                    >
+                        <Page
+                            key={currentPage}
+                            pageNumber={currentPage}
+                            scale={scale}
+                            renderTextLayer={false}
+                            renderAnnotationLayer={false}
+                        />
+                    </Document>
+                </div>
             </div>
         </div>
     );
