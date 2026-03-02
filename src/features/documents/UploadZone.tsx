@@ -56,7 +56,7 @@ export default function UploadZone() {
                         handleFile(e.target.files[0]);
                     }
                 }}
-                className="mx-auto block"
+                className="ml-34"
             />
         </div>
     );
