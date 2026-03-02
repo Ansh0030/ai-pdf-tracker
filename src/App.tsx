@@ -9,7 +9,8 @@ import UploadZone from "./features/documents/UploadZone";
 import PdfViewer from "./features/documents/PdfViewer";
 import ChatPanel from "./features/chat/ChatPanel";
 
-function Dashboard() {
+
+const Dashboard = () => {
     const dispatch = useAppDispatch();
 
     return (
@@ -35,7 +36,7 @@ function Dashboard() {
             </div>
         </div>
     );
-}
+};
 
 function App() {
     const dispatch = useAppDispatch();
@@ -63,3 +64,4 @@ function App() {
 }
 
 export default App;
+

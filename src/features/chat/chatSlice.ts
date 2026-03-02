@@ -2,35 +2,45 @@ import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
 
 interface Message {
     id: string;
-    role: "user" | "assistant";
-    content: string;
+    sender: "user" | "bot";
+    text: string;
 }
 
 interface ChatState {
     messages: Message[];
-    loading: boolean;
 }
 
 const initialState: ChatState = {
     messages: [],
-    loading: false,
+};
+
+// Preset questions and answers
+const presetQA: Record<string, string> = {
+    "What is the company name?": "The company name is Trinetra Solutions.",
+    "What is the role?": "The role is Senior Frontend Engineer.",
+    "What is the salary?": "The salary is 9–12 LPA.",
 };
 
 const chatSlice = createSlice({
     name: "chat",
     initialState,
     reducers: {
-        addMessage(state, action: PayloadAction<Message>) {
-            state.messages.push(action.payload);
+        addUserMessage: (state, action: PayloadAction<string>) => {
+            state.messages.push({ id: crypto.randomUUID(), sender: "user", text: action.payload });
         },
-        setLoading(state, action: PayloadAction<boolean>) {
-            state.loading = action.payload;
+        addBotMessage: (state, action: PayloadAction<string>) => {
+            state.messages.push({ id: crypto.randomUUID(), sender: "bot", text: action.payload });
         },
-        clearChat(state) {
+        answerQuestion: (state, action: PayloadAction<string>) => {
+            const question = action.payload;
+            const answer = presetQA[question] || "No result found.";
+            state.messages.push({ id: crypto.randomUUID(), sender: "bot", text: answer });
+        },
+        clearChat: (state) => {
             state.messages = [];
         },
     },
 });
 
-export const { addMessage, setLoading, clearChat } = chatSlice.actions;
+export const { addUserMessage, addBotMessage, answerQuestion, clearChat } = chatSlice.actions;
 export default chatSlice.reducer;
