@@ -1,6 +1,6 @@
 import axios from "axios";
 import { store } from "../store/store";
-import { loginSuccess, logout } from "../features/auth/authSlice";
+import { loginSuccess } from "../features/auth/authSlice";
 
 const api = axios.create({
     baseURL: "https://mock.api",
@@ -45,7 +45,7 @@ api.interceptors.response.use(
             originalRequest._retry = true;
             isRefreshing = true;
 
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 setTimeout(() => {
                     const newToken = "new-mock-token";
 

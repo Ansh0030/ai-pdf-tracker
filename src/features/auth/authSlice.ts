@@ -32,7 +32,7 @@ const authSlice = createSlice({
             state.user = null;
             state.isAuthenticated = false;
         },
-        restoreSession(state, action: PayloadAction<AuthState>) {
+        restoreSession(_state, action: PayloadAction<AuthState>) {
             return action.payload;
         },
     },
