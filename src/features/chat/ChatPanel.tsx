@@ -1,5 +1,5 @@
 // src/features/chat/ChatPanel.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addUserMessage, answerQuestion, clearChat } from "./chatSlice";
 import type {RootState} from "../../store/store.ts";

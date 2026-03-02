@@ -17,7 +17,7 @@ const Dashboard = () => {
         <div className="flex h-screen p-6 gap-6">
             <div className="flex-1 overflow-auto">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-xl font-bold">Dashboard</h1>
+                    <h1 className="text-xl font-bold">PDF Dashboard</h1>
 
                     <button
                         onClick={() => dispatch(logout())}
